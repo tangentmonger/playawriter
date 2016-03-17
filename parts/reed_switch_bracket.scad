@@ -24,12 +24,17 @@ wall_width = 2;
 difference(){
 	union() {
 		translate([-frame_width/2, -lip_to_hole]) cube([frame_width, lip_to_hole + hole_to_end, part_height]); //lowest flat part
-		translate([-frame_width/2, -lip_to_hole - overlap, part_height]) cube([frame_width, overlap + inner_frame_length,  part_height]);//upper flat part
-		translate([-frame_width/2, hole_to_reed, part_height + reed_diameter/2]) rotate([0,90,0]) cylinder(d=reed_diameter+2*wall_width, h=frame_width);//reed protector box
-	}
-	cylinder(d=hole_diameter, h=part_height); //screw hole
-	translate([-frame_width/2, hole_to_reed, part_height + reed_diameter/2]) rotate([0,90,0]) cylinder(d=reed_diameter, h=frame_width); //reed hole
-	translate([frame_width/2 - (frame_width - reed_full_length)/2, hole_to_reed - reed_diameter/2 - wall_width, part_height]) cube([(frame_width - reed_full_length)/2, reed_diameter/2+wall_width, reed_diameter]); //reed legs hole RHS
 
-	translate([-frame_width/2 , hole_to_reed - reed_diameter/2 - wall_width, part_height]) #cube([(frame_width - reed_full_length)/2, reed_diameter/2+wall_width, reed_diameter]); //reed legs hole LHS
+		translate([-frame_width/2, -lip_to_hole - overlap, part_height]) cube([frame_width, overlap + inner_frame_length,  part_height]);//upper flat part
+
+		translate([-frame_width/2, hole_to_reed, part_height + reed_diameter/2]) rotate([0,90,0]) cylinder(d=reed_diameter+2*wall_width, h=frame_width);//reed protector cylinder
+	}
+
+	cylinder(d=hole_diameter, h=part_height); //screw hole
+
+	translate([-frame_width/2, hole_to_reed, part_height + reed_diameter/2]) rotate([0,90,0]) cylinder(d=reed_diameter, h=frame_width); //reed hole
+
+	translate([frame_width/2 - (frame_width - reed_full_length)/2, hole_to_reed - reed_diameter/2 - wall_width, part_height]) cube([(frame_width - reed_full_length), reed_diameter/2+wall_width, reed_diameter]); //reed legs gap RHS
+
+	translate([-frame_width/2 - (frame_width - reed_full_length)/2, hole_to_reed - reed_diameter/2 - wall_width, part_height]) #cube([(frame_width - reed_full_length), reed_diameter/2+wall_width, reed_diameter]); //reed legs gap LHS
 }
