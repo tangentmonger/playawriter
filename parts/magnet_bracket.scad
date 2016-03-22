@@ -1,19 +1,20 @@
 magnet_centre_to_axle = 65;
 spokes = 10;
 
+clip_length = 20; //mm
 
-squooj_factor = 0.5; //mm
+squooj_factor = 1; //mm
 magnet_side = 5 + squooj_factor; //mm
 magnet_wall_thickness = 1; //mm
-magnet_up = 5; //mm
+magnet_up = (clip_length / 2) - (magnet_side / 2); //mm
 magnet_holder_width = magnet_side + 2*magnet_wall_thickness;
 
-spoke_diameter = 2.5 + squooj_factor; //mm
+spoke_diameter = 2 + squooj_factor; //mm
 
-clip_length = 15; //mm
+
 clip_wall_thickness = 2; //mm
 
-clip_gap = spoke_diameter / 2; //mm
+clip_gap = (spoke_diameter+ squooj_factor) / 2 ; //mm
 clip_diameter = spoke_diameter + (2 * clip_wall_thickness);
 
 fudge = 0.0001; // fix for "Object isn't a valid 2-manifold!"
@@ -32,7 +33,10 @@ connector_length = magnet_centre_to_axle * sin((360/spokes)/2); //half length fo
 connector_width = magnet_holder_width;
 connector_height = 3;
 
+remove_top = 1;
+
 $fn = 20;
+
 
 translate([magnet_centre_to_axle,0,0]) clip();
 rotate([0,0,360/spokes]) translate([magnet_centre_to_axle,0,0]) mirror([0,1,0]) clip();
@@ -61,6 +65,8 @@ difference(){
 	translate([spoke_diameter/2, -magnet_side/2, magnet_up]) cube([magnet_side, magnet_side, magnet_side]); //maget space
 
 	translate([-spoke_diameter/2 - clip_wall_thickness, -magnet_side/2, magnet_up]) cube([spoke_diameter+clip_wall_thickness, magnet_side, magnet_side]); //magnet going through clipspace
+
+	translate([-spoke_diameter/2 - clip_wall_thickness,-(spoke_diameter+2*clip_wall_thickness)/2 , 0]) cube([remove_top, spoke_diameter+2*clip_wall_thickness, clip_length]); //slice off top few layers that don't add anything useful
 }
 }
 }
