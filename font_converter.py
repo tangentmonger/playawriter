@@ -68,11 +68,11 @@ for letter in LETTERS:
 
     # convert image to vertical line data
     raw_data = list(img.getdata())
-    lines = list(_chunk_list(raw_data, height))
+    lines = reversed(list(_chunk_list(raw_data, height)))
     for line in lines:
         line = line[TOP:] # remove top rows that are not used by these glyphs
         # represent each line as binary encoded value
-        value = sum([bit * (2**index) for index, bit in enumerate(reversed(line))])
+        value = sum([bit * (2**index) for index, bit in enumerate(line)])
         letter_lines.append(value)
         #todo: keep value if it's zero (i.e. a whole vertical row that is empty?)
         #maybe it's for kerning?
@@ -86,14 +86,14 @@ with open(os.path.join(OUTPUT_LOCATION, "font.h"), 'w') as header_file:
     print("", file=header_file)
     print("#include <avr/pgmspace.h>", file=header_file)
     print("", file=header_file)
-    print("const int LETTERS = %d;" % len(LETTERS), file=header_file)
-    print("char letters[LETTERS+1] PROGMEM = \"%s\"; //null terminated" % LETTERS, file=header_file)
-    print("int letter_height = %d;" % (letter_height - TOP), file=header_file)
-    print("int letter_widths[LETTERS] PROGMEM = {%s};" % ",".join([str(len(letter)) for letter in letter_data]), file=header_file)
+    print("const int N_LETTERS = %d;" % len(LETTERS), file=header_file)
+    print("char LETTER_INDEX[N_LETTERS+1] = \"%s\"; //null terminated" % LETTERS, file=header_file)
+    print("int LETTER_HEIGHT = %d;" % (letter_height - TOP), file=header_file)
+    print("int LETTER_WIDTHS[N_LETTERS] = {%s};" % ",".join([str(len(letter)) for letter in letter_data]), file=header_file)
     print("", file=header_file)
 
     for index, letter in enumerate(letter_data):
-        print("short letter_data_%d[] PROGMEM = {%s}; // %s" % (index, ",".join(str(line) for line in letter), LETTERS[index]), file=header_file)
+        print("unsigned short LETTER_DATA_%d[] = {%s}; // %s" % (index, ",".join(str(line) for line in letter), LETTERS[index]), file=header_file)
     print("", file=header_file)
 
-    print("short* letter_data[] PROGMEM = {%s};" % (",".join(["letter_data_%d" % i for i in range(len(letter_data)) ])), file=header_file)
+    print("unsigned short* LETTER_DATA[] = {%s};" % (",".join(["LETTER_DATA_%d" % i for i in range(len(letter_data)) ])), file=header_file)
