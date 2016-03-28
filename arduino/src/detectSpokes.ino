@@ -4,6 +4,8 @@ and a reed switch on the frame. Flash the LED on every full
 rotation.
 */
 
+#include "font.h"
+
 int reedSwitchPin = 2;
 int LEDPin = 13; // the number of the output pin
 
